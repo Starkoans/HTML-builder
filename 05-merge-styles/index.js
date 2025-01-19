@@ -1,11 +1,7 @@
 const fs = require('node:fs/promises');
 const path = require('node:path');
 
-const stylesDir = path.join(__dirname, 'styles');
-const projectDist = path.join(__dirname, 'project-dist');
-const bundlePath = path.join(projectDist, 'bundle.css');
-
-(async function () {
+async function mergeStyles(stylesDir, bundleFilePath) {
     try {
 
         const files = await fs.readdir(stylesDir, { withFileTypes: true });
@@ -21,9 +17,18 @@ const bundlePath = path.join(projectDist, 'bundle.css');
     
         const mergedStyles = arr.join('\n');
     
-        await fs.writeFile(bundlePath, mergedStyles, 'utf-8');
+        await fs.writeFile(bundleFilePath, mergedStyles, 'utf-8');
+
     } catch (error) {
         console.log(error)
     }
 
-})()
+}
+
+const stylesDir = path.join(__dirname, 'styles');
+const projectDistDir = path.join(__dirname, 'project-dist');
+const bundleFilePath = path.join(projectDistDir, 'bundle.css');
+
+mergeStyles(stylesDir,bundleFilePath);
+
+module.exports = {mergeStyles};
